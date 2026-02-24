@@ -1,0 +1,38 @@
+# Alpine-Maintainer: Natanael Copa <ncopa@alpinelinux.org>
+# Maintainer: Felix Xing <fxing@qnx.com>
+pkgname=gperf
+pkgver=3.1
+pkgrel=1
+pkgdesc="Perfect hash function generator."
+url="https://www.gnu.org/software/gperf/"
+arch="all"
+#options="!check"
+license="GPL-3.0-or-later"
+depends="libc++"
+makedepends="clang libc++-dev"
+subpackages="$pkgname-doc"
+source="https://ftp.gnu.org/gnu/gperf/gperf-$pkgver.tar.gz"
+
+build() {
+    CC="clang" \
+    CXX="clang++" \
+    CFLAGS="-Qunused-arguments"\
+    CXXFLAGS="-Qunused-arguments -std=c++11"\
+    ./configure \
+        --build="$CBUILD" \
+        --host="$CHOST" \
+        --prefix=/usr
+    make
+}
+
+check() {
+    make -j1 check
+}
+
+package() {
+    make DESTDIR="$pkgdir" install
+}
+
+sha512sums="
+855ebce5ff36753238a44f14c95be7afdc3990b085960345ca2caf1a2db884f7db74d406ce9eec2f4a52abb8a063d4ed000a36b317c9a353ef4e25e2cca9a3f4  gperf-3.1.tar.gz
+"
